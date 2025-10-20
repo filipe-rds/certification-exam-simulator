@@ -96,9 +96,11 @@ Edite `assets/data/questions-unified.js` e adicione novos objetos ao array `wind
 ## 🔧 Estrutura dos Arquivos
 
 ```
-📁 seu-simulador/
+📁 certification-exam-simulator/
 ├── 📄 index.html
 ├── 📄 README.md
+├── 📄 LICENSE
+├── 📄 .gitignore
 ├── 📁 assets/
 │   ├── 📁 css/
 │   │   └── style.css           # Estilos e temas
@@ -108,9 +110,10 @@ Edite `assets/data/questions-unified.js` e adicione novos objetos ao array `wind
 │       ├── config.js           # ⚙️ EDITE AQUI: Configurações
 │       └── questions-unified.js # 📚 EDITE AQUI: Tópicos e questões
 └── 📁 docs/                    # Esta pasta
+    ├── README.md               # Este arquivo (índice)
     ├── CONFIG-GUIDE.md         # 📝 Guia de configuração
     ├── QUESTIONS-GUIDE.md      # 📚 Guia de questões
-    └── README.md               # Este arquivo
+    └── LICENSE-INFO.md         # 📋 Informações sobre licença
 ```
 
 ---

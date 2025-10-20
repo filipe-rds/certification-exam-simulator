@@ -2,13 +2,20 @@
  * Unified Question Bank - Certification Exam Simulator
  * Supports bilingual questions (English and Portuguese)
  * 
- * CUSTOMIZATION INSTRUCTIONS:
- * 1. Edit window.questionConfig.topics to define your exam subject areas
- * 2. Edit window.questionBank array to add your questions
- * 3. Each question supports both English (en) and Portuguese (pt)
- * 4. Question types: 'single' (one correct answer) or 'multiple' (multiple correct answers)
+ * 📖 DOCUMENTATION: See docs/QUESTIONS-GUIDE.md for detailed instructions
+ * 🤖 AI AUTOMATION: Use the prompts in docs/QUESTIONS-GUIDE.md to generate topics and questions
  * 
- * NOTE: Quiz configuration (totalQuestions, passingScore, timeLimit) is in config.js
+ * STRUCTURE:
+ * 1. window.questionConfig.topics - Define your exam topics/areas
+ * 2. window.questionBank - Add your bilingual questions
+ * 
+ * QUESTION PROPERTIES:
+ * - id: unique identifier (format: topic_q###)
+ * - type: 'single' (one answer) or 'multiple' (multiple answers)
+ * - topic: must match a key in questionConfig.topics
+ * - en/pt: bilingual content (question, options, correct, explanation, tip)
+ * 
+ * NOTE: Each question does NOT need a 'difficulty' property
  */
 
 // Question metadata - Topics for performance analysis
@@ -42,8 +49,7 @@ window.questionUtils = {
         return window.questionBank.map(q => ({
             id: q.id,
             type: q.type,
-            category: q.category,
-            difficulty: q.difficulty,
+            topic: q.topic,
             ...q[language]
         }));
     },
@@ -66,18 +72,19 @@ window.questionUtils = {
 };
 
 // SAMPLE QUESTION BANK - Replace with your own questions
+// See docs/QUESTIONS-GUIDE.md for complete instructions and AI automation
+//
 // Each question must have:
-// - id: unique identifier
+// - id: unique identifier (format: topic_q###)
 // - type: 'single' or 'multiple'
 // - topic: matches a key in questionConfig.topics
 // - en: English version with question, options, correct (array of indices), explanation, tip
 // - pt: Portuguese version with same structure
 window.questionBank = [
     {
-        id: 'q1',
+        id: 'topic1_q001',
         type: 'multiple',
         topic: 'topic1',
-        difficulty: 'medium',
         en: {
             question: "Sample question in English? (Select TWO)",
             options: [
@@ -104,10 +111,9 @@ window.questionBank = [
         }
     },
     {
-        id: 'q2',
+        id: 'topic2_q001',
         type: 'single',
         topic: 'topic2',
-        difficulty: 'easy',
         en: {
             question: "Another sample question in English?",
             options: [
@@ -132,10 +138,9 @@ window.questionBank = [
         }
     },
     {
-        id: 'q3',
+        id: 'topic3_q001',
         type: 'single',
         topic: 'topic3',
-        difficulty: 'hard',
         en: {
             question: "Third sample question demonstrating the format?",
             options: [

@@ -4,12 +4,50 @@ Este guia mostra como preencher o arquivo `assets/data/questions-unified.js` com
 
 ---
 
-## 📂 Estrutura do Arquivo
+## � Índice
+
+1. **[Estrutura do Arquivo](#-estrutura-do-arquivo)** - Visão geral dos objetos
+2. **[Parte 1: Configurar Tópicos](#-parte-1-configurar-tópicos)** - Como definir áreas temáticas
+3. **[Parte 2: Adicionar Questões](#-parte-2-adicionar-questões)** - Como criar questões bilíngues
+4. **[Tipos de Questões](#-tipos-de-questões)** - Single vs Multiple Choice
+5. **[🤖 Prompt 1: Gerar Tópicos](#-prompt-1-gerar-tópicos)** - Automação de tópicos
+6. **[🤖 Prompt 2: Gerar Questões](#-prompt-2-gerar-banco-de-questões)** - Automação de questões
+7. **[Checklist de Validação](#-checklist-de-validação)** - Verificações finais
+8. **[Dicas Importantes](#-dicas-importantes)** - Boas práticas
+
+---
+
+## �📂 Estrutura do Arquivo
 
 O arquivo `questions-unified.js` contém 2 objetos principais:
 
 1. **`window.questionConfig.topics`** - Definição dos tópicos/áreas temáticas
 2. **`window.questionBank`** - Array com todas as questões
+
+**🤖 Use os prompts de automação abaixo para gerar tudo automaticamente!**
+
+---
+
+## ⚡ Resumo Rápido
+
+### Fluxo de Trabalho Recomendado
+
+```
+1️⃣ Use o PROMPT 1 → Gere os tópicos
+   ↓
+2️⃣ Cole o resultado em questions-unified.js (window.questionConfig)
+   ↓
+3️⃣ Use o PROMPT 2 → Converta suas questões
+   ↓
+4️⃣ Cole o resultado em questions-unified.js (window.questionBank)
+   ↓
+5️⃣ Teste no navegador (index.html)
+```
+
+### Tempo Estimado
+
+- **Com Prompts de IA**: 30-60 minutos para um simulador completo
+- **Manual**: 2-4 horas
 
 ---
 
@@ -57,7 +95,6 @@ window.questionBank = [
     id: "topico_q001", // ID único com prefixo do tópico
     type: "single", // 'single' ou 'multiple'
     topic: "nome_do_topico", // Deve existir em questionConfig.topics
-    difficulty: "medium", // 'easy', 'medium' ou 'hard'
 
     en: {
       question: "Texto da pergunta em inglês?",
@@ -85,6 +122,8 @@ window.questionBank = [
 ];
 ```
 
+**Nota**: A propriedade `difficulty` é opcional e não é necessária para o funcionamento do simulador.
+
 ---
 
 ## 🔢 Tipos de Questões
@@ -93,14 +132,22 @@ window.questionBank = [
 
 ```javascript
 {
-    id: 'java_q001',
+    id: 'topic1_q001',
     type: 'single',
-    // ...
+    topic: 'topic1',
     en: {
         question: "Qual é a saída?\n\nint x = 5;\nSystem.out.println(x++);",
         options: ["4", "5", "6", "Erro"],
         correct: [1],  // Apenas índice 1 (opção "5")
-        // ...
+        explanation: "Post-increment returns the value then increments.",
+        tip: "x++ uses then increments, ++x increments then uses."
+    },
+    pt: {
+        question: "Qual é a saída?\n\nint x = 5;\nSystem.out.println(x++);",
+        options: ["4", "5", "6", "Erro"],
+        correct: [1],
+        explanation: "Pós-incremento retorna o valor e depois incrementa.",
+        tip: "x++ usa depois incrementa, ++x incrementa depois usa."
     }
 }
 ```
@@ -109,9 +156,9 @@ window.questionBank = [
 
 ```javascript
 {
-    id: 'collections_q001',
+    id: 'topic2_q001',
     type: 'multiple',
-    // ...
+    topic: 'topic2',
     en: {
         question: "Quais DUAS coleções permitem duplicatas?",
         options: [
@@ -121,47 +168,84 @@ window.questionBank = [
             "LinkedList"    // Correta
         ],
         correct: [1, 3],   // Índices 1 e 3
-        // ...
+        explanation: "ArrayList and LinkedList implement List, which allows duplicates.",
+        tip: "Sets guarantee uniqueness, Lists allow duplicates."
+    },
+    pt: {
+        question: "Quais DUAS coleções permitem duplicatas?",
+        options: [
+            "HashSet",
+            "ArrayList",
+            "TreeSet",
+            "LinkedList"
+        ],
+        correct: [1, 3],
+        explanation: "ArrayList e LinkedList implementam List, que permite duplicatas.",
+        tip: "Sets garantem unicidade, Lists permitem duplicatas."
     }
 }
 ```
 
 ---
 
-## 🤖 PROMPT DE AUTOMAÇÃO - TÓPICOS
+## 🤖 AUTOMAÇÃO COM IA
 
-Copie e cole para gerar os tópicos automaticamente:
+Use os prompts abaixo para gerar tópicos e questões automaticamente com ChatGPT, Claude ou outra IA generativa.
 
-````
+**💡 Dica**: Execute os prompts na ordem (1 → 2) para melhores resultados!
+
+---
+
+## 🤖📋 PROMPT 1: Gerar Tópicos
+
+**🎯 O que faz**: Gera o objeto `window.questionConfig.topics` completo baseado na certificação.
+
+**⏱️ Tempo**: ~5 minutos
+
+**Copie e cole este prompt:**
+
+````markdown
 Você é um especialista em criar simuladores de certificação. Preciso que você gere os tópicos (topics) para o meu banco de questões.
 
-CERTIFICAÇÃO: [Nome e código da certificação]
+**CERTIFICAÇÃO**: [Nome e código da certificação - ex: Oracle Java SE 11 (1Z0-819)]
 
-TAREFA:
+**TAREFA**:
+
 1. Pesquise os principais tópicos cobrados nesta certificação
 2. Identifique 5-10 áreas temáticas principais
-3. Gere o objeto window.questionConfig.topics completo
+3. Gere o objeto `window.questionConfig.topics` completo
 4. Use nomes descritivos e emojis relevantes
 5. Mantenha descrições curtas (máx 60 caracteres)
 
-FORMATO DE SAÍDA:
+**REGRAS**:
+
+- Chaves em `snake_case` (ex: `java_fundamentals`, `oop_concepts`)
+- Name: 2-4 palavras descritivas
+- Description: Uma frase curta (máx 60 caracteres)
+- Icon: Emoji representativo do tema
+- Quantidade: Entre 5-10 tópicos
+
+**FORMATO DE SAÍDA**:
+
 ```javascript
 window.questionConfig = {
-    topics: {
-        // Seus tópicos aqui
-    }
+  topics: {
+    topico_1: {
+      name: "Nome do Tópico",
+      description: "Descrição curta do que será coberto",
+      icon: "📚",
+    },
+    topico_2: {
+      name: "Outro Tópico",
+      description: "Outra descrição curta",
+      icon: "🎯",
+    },
+    // ... mais tópicos
+  },
 };
-````
+```
 
-REGRAS:
-
-- Chaves em snake_case (ex: java_fundamentals)
-- Name: 2-4 palavras
-- Description: Uma frase curta
-- Icon: Emoji representativo
-- 5-10 tópicos no total
-
-EXEMPLO:
+**EXEMPLO REAL**:
 
 ```javascript
 window.questionConfig = {
@@ -185,46 +269,67 @@ window.questionConfig = {
 };
 ```
 
-CERTIFICAÇÃO:
-[Cole aqui o nome da certificação]
+**CERTIFICAÇÃO QUE QUERO**:
+[Cole aqui o nome e código da certificação]
+````
 
-```
+**✅ Após executar este prompt**:
+
+1. Copie o código JavaScript gerado pela IA
+2. Abra `assets/data/questions-unified.js`
+3. Substitua o conteúdo de `window.questionConfig = { topics: { ... } };`
+4. Salve o arquivo
+5. Prossiga para o **PROMPT 2** para gerar as questões
 
 ---
 
-## 🤖 PROMPT DE AUTOMAÇÃO - QUESTÕES
+## 🤖📝 PROMPT 2: Gerar Banco de Questões
 
-Copie e cole para converter questões automaticamente:
+**🎯 O que faz**: Converte suas questões (em qualquer formato) para o formato bilíngue do simulador.
 
+**⏱️ Tempo**: ~20-45 minutos (depende da quantidade de questões)
+
+**📌 Pré-requisito**: Execute o PROMPT 1 primeiro para ter os tópicos definidos!
+
+**Copie e cole este prompt:**
+
+````markdown
+Você é um especialista em criar simuladores de certificação. Preciso que você converta questões para o formato bilíngue do meu simulador.
+
+**TÓPICOS DISPONÍVEIS**:
+
+```javascript
+[Cole aqui o código completo de window.questionConfig.topics que você gerou no Prompt 1]
 ```
 
-Você é um especialista em criar simuladores de certificação. Preciso que você converta questões para o formato do meu simulador.
+**QUESTÕES PARA CONVERTER**:
 
-TÓPICOS DISPONÍVEIS:
-[Cole aqui os tópicos que você gerou anteriormente]
+```
+[Cole suas questões aqui - podem estar em qualquer formato: PDF, texto, doc, planilha, etc.]
+```
 
-QUESTÕES PARA CONVERTER:
-[Cole suas questões aqui - podem estar em qualquer formato]
+**TAREFA**:
 
-TAREFA:
+1. Analise cada questão cuidadosamente
+2. Atribua ao tópico mais apropriado (use as chaves dos tópicos acima)
+3. Identifique o tipo: `'single'` (uma resposta) ou `'multiple'` (várias respostas)
+4. Gere explicações educativas (2-3 frases) de por que a resposta está correta
+5. Crie dicas estratégicas para ajudar a lembrar o conceito no exame
+6. Forneça AMBAS as versões: inglês (`en`) e português (`pt`)
+7. Garanta que ambas as versões tenham EXATAMENTE a mesma estrutura
 
-1. Analise cada questão
-2. Atribua ao tópico mais apropriado
-3. Identifique se é 'single' (uma resposta) ou 'multiple' (várias respostas)
-4. Defina dificuldade: 'easy', 'medium' ou 'hard'
-5. Gere explicações educativas (2-3 frases)
-6. Crie dicas estratégicas para o exame
-7. Forneça AMBAS as versões: inglês (en) e português (pt)
+**REGRAS CRÍTICAS**:
 
-REGRAS CRÍTICAS:
+- **ID**: formato `{topico}_q{numero}` com 3 dígitos (ex: `java_fund_q001`, `oop_q045`)
+- **Type**: `'single'` para uma resposta ou `'multiple'` para várias
+- **Topic**: DEVE corresponder a uma chave existente em `questionConfig.topics`
+- **Correct**: array com índices base-0 (ex: `[1]` para opção B, `[0, 2]` para A e C)
+- **Options**: mantenha a ordem original quando possível
+- **Explanation**: explique o raciocínio, não apenas reafirme a resposta
+- **Tip**: dica prática/mnemônica para lembrar o conceito
+- **NÃO inclua** a propriedade `difficulty` (não é necessária)
 
-- ID: formato {topico}\_q{numero} (ex: java_q001, oop_q045)
-- Type: 'single' para uma resposta, 'multiple' para várias
-- Topic: deve existir nos tópicos fornecidos
-- Correct: array com índices base-0 (ex: [1] ou [0, 2])
-- Ambos en e pt devem ter EXATAMENTE a mesma estrutura
-
-FORMATO DE SAÍDA:
+**FORMATO DE SAÍDA**:
 
 ```javascript
 window.questionBank = [
@@ -232,61 +337,108 @@ window.questionBank = [
     id: "topico_q001",
     type: "single",
     topic: "nome_do_topico",
-    difficulty: "medium",
     en: {
-      question: "Pergunta em inglês?",
-      options: ["A", "B", "C", "D"],
+      question: "Question text in English?",
+      options: ["Option A", "Option B", "Option C", "Option D"],
       correct: [1],
-      explanation: "Explicação educativa em inglês.",
-      tip: "Dica estratégica em inglês.",
+      explanation:
+        "Educational explanation of why B is correct and others are wrong.",
+      tip: "Strategic tip to remember this concept in the exam.",
     },
     pt: {
-      question: "Pergunta em português?",
-      options: ["A", "B", "C", "D"],
+      question: "Texto da pergunta em português?",
+      options: ["Opção A", "Opção B", "Opção C", "Opção D"],
       correct: [1],
-      explanation: "Explicação educativa em português.",
-      tip: "Dica estratégica em português.",
+      explanation:
+        "Explicação educativa de por que B está correta e as outras erradas.",
+      tip: "Dica estratégica para lembrar este conceito no exame.",
     },
   },
-  // Repita para todas as questões
+  // ... repita para todas as questões
 ];
 ```
 
-EXEMPLO COMPLETO:
+**EXEMPLO REAL - Single Choice**:
 
 ```javascript
 {
-    id: 'java_fund_q001',
-    type: 'single',
-    topic: 'java_fundamentals',
-    difficulty: 'easy',
-    en: {
-        question: "What is the output?\n\nint x = 5;\nSystem.out.println(x++);",
-        options: ["4", "5", "6", "Compilation error"],
-        correct: [1],
-        explanation: "Post-increment (x++) returns 5, then increments x to 6. Pre-increment (++x) would return 6.",
-        tip: "Remember: x++ uses then increments, ++x increments then uses."
-    },
-    pt: {
-        question: "Qual é a saída?\n\nint x = 5;\nSystem.out.println(x++);",
-        options: ["4", "5", "6", "Erro de compilação"],
-        correct: [1],
-        explanation: "Pós-incremento (x++) retorna 5, depois incrementa x para 6. Pré-incremento (++x) retornaria 6.",
-        tip: "Lembre-se: x++ usa depois incrementa, ++x incrementa depois usa."
-    }
+  id: 'java_fund_q001',
+  type: 'single',
+  topic: 'java_fundamentals',
+  en: {
+    question: "What is the output?\n\nint x = 5;\nSystem.out.println(x++);",
+    options: ["4", "5", "6", "Compilation error"],
+    correct: [1],
+    explanation: "Post-increment (x++) returns the current value (5), then increments x to 6. Pre-increment (++x) would first increment then return 6.",
+    tip: "Remember: x++ uses then increments, ++x increments then uses."
+  },
+  pt: {
+    question: "Qual é a saída?\n\nint x = 5;\nSystem.out.println(x++);",
+    options: ["4", "5", "6", "Erro de compilação"],
+    correct: [1],
+    explanation: "Pós-incremento (x++) retorna o valor atual (5), depois incrementa x para 6. Pré-incremento (++x) primeiro incrementaria depois retornaria 6.",
+    tip: "Lembre-se: x++ usa depois incrementa, ++x incrementa depois usa."
+  }
 }
 ```
 
-CONVERTA ESTAS QUESTÕES:
-[Cole suas questões aqui]
+**EXEMPLO REAL - Multiple Choice**:
 
+```javascript
+{
+  id: 'collections_q001',
+  type: 'multiple',
+  topic: 'collections',
+  en: {
+    question: "Which TWO collections allow duplicate elements? (Choose TWO)",
+    options: [
+      "HashSet",
+      "ArrayList",
+      "TreeSet",
+      "LinkedList"
+    ],
+    correct: [1, 3],
+    explanation: "ArrayList and LinkedList implement the List interface, which allows duplicate elements. HashSet and TreeSet implement Set, which guarantees uniqueness.",
+    tip: "Remember: Sets guarantee uniqueness, Lists allow duplicates."
+  },
+  pt: {
+    question: "Quais DUAS coleções permitem elementos duplicados? (Escolha DUAS)",
+    options: [
+      "HashSet",
+      "ArrayList",
+      "TreeSet",
+      "LinkedList"
+    ],
+    correct: [1, 3],
+    explanation: "ArrayList e LinkedList implementam a interface List, que permite elementos duplicados. HashSet e TreeSet implementam Set, que garante unicidade.",
+    tip: "Lembre-se: Sets garantem unicidade, Lists permitem duplicatas."
+  }
+}
+```
+
+**IMPORTANTE**:
+
+- Numere os IDs sequencialmente por tópico (`_q001`, `_q002`, etc.)
+- Mantenha consistência nas traduções (mesma estrutura, mesmo número de opções)
+- Se a questão original estiver apenas em um idioma, você DEVE gerar a tradução
+
+**CONVERTA AS QUESTÕES ACIMA**
 ````
+
+**✅ Após executar este prompt**:
+
+1. Copie o código JavaScript gerado pela IA
+2. Abra `assets/data/questions-unified.js`
+3. Substitua o conteúdo de `window.questionBank = [ ... ];`
+4. Salve o arquivo
+5. Abra `index.html` no navegador e teste!
 
 ---
 
 ## ✅ Checklist de Validação
 
 ### Para Tópicos:
+
 - [ ] Entre 5-10 tópicos definidos
 - [ ] Chaves em snake_case
 - [ ] Nomes descritivos (2-4 palavras)
@@ -294,31 +446,34 @@ CONVERTA ESTAS QUESTÕES:
 - [ ] Emojis relevantes
 
 ### Para Questões:
+
 - [ ] ID único para cada questão
 - [ ] Formato: `{topico}_q{numero}`
 - [ ] Type correto ('single' ou 'multiple')
 - [ ] Topic existe em questionConfig.topics
-- [ ] Difficulty: 'easy', 'medium' ou 'hard'
 - [ ] Correct array com índices corretos (base-0)
 - [ ] Versões EN e PT completas
 - [ ] Explicações educativas (2-3 frases)
 - [ ] Dicas estratégicas úteis
 - [ ] Sem erros de sintaxe JavaScript
+- [ ] NÃO incluir propriedade 'difficulty' (opcional)
 
 ---
 
 ## 📌 Dicas Importantes
 
 ### 1. IDs das Questões
+
 ```javascript
 // ✅ BOM:
-id: 'java_fund_q001'
-id: 'collections_q045'
+id: "topic1_q001";
+id: "topic2_q045";
 
 // ❌ RUIM:
-id: 'question1'
-id: 'q_001'
-````
+id: "question1";
+id: "q_001";
+id: "q1"; // Muito curto
+```
 
 ### 2. Índices Corretos
 
@@ -355,11 +510,11 @@ explanation: "A resposta correta é ArrayList.";
 
 ### 5. Mapeamento de Tópicos
 
-Analise o conceito PRINCIPAL da questão:
+Analise o conceito PRINCIPAL da questão e atribua ao tópico correto:
 
-- Questão sobre `int x = 5; x++;` → `java_fundamentals`
-- Questão sobre `class extends` → `oop_concepts`
-- Questão sobre `ArrayList.add()` → `collections`
+- Questão sobre sintaxe básica → `topic1` (ou o tópico correspondente aos fundamentos)
+- Questão sobre conceitos avançados → `topic2` (ou o tópico correspondente)
+- Questão sobre funcionalidades específicas → `topic3` (ou o tópico correspondente)
 
 ---
 
@@ -409,7 +564,6 @@ window.questionBank = [
     id: "fundamentals_q001",
     type: "single",
     topic: "fundamentals",
-    difficulty: "easy",
     en: {
       question: "What is 2 + 2?",
       options: ["3", "4", "5", "6"],

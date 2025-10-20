@@ -5,14 +5,16 @@
  * THIS IS THE MAIN CONFIGURATION FILE
  * - Quiz settings (questions count, passing score, time limit) are defined here
  * - All UI texts for both languages are defined here
- * - Customize these values to create your own certification simulator
+ * 
+ * 📖 DOCUMENTATION: See docs/CONFIG-GUIDE.md for detailed instructions
+ * 🤖 AI AUTOMATION: Use the prompt in docs/CONFIG-GUIDE.md to generate this automatically
  */
 
 // ============================================================================
 // 📝 CERTIFICATION-SPECIFIC SETTINGS
 // ============================================================================
 // This is the ONLY section you need to modify for each certification!
-// Fill in the details of your target certification exam below.
+// See docs/CONFIG-GUIDE.md for complete instructions and AI automation prompt.
 
 window.certificationInfo = {
     // Basic certification details

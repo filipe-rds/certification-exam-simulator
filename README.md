@@ -100,166 +100,57 @@ Deploy gratuito em:
     └── QUESTIONS-GUIDE.md          # Guia de questões
 ```
 
-### Abordagem Modular (Novo!)
+### 📚 Documentação Completa
+
+Para instruções detalhadas de personalização, consulte a **[documentação completa em `/docs/`](docs/README.md)**:
+
+- **[docs/CONFIG-GUIDE.md](docs/CONFIG-GUIDE.md)** - Como configurar a certificação (5-10 minutos)
+- **[docs/QUESTIONS-GUIDE.md](docs/QUESTIONS-GUIDE.md)** - Como adicionar tópicos e questões (30-60 minutos)
+
+### ⚡ Resumo Rápido
 
 **Apenas ~30 linhas para personalizar!**
 
-Agora você edita apenas o objeto `window.certificationInfo` e o resto é auto-preenchido automaticamente:
+1. **Configure a certificação** em `assets/data/config.js`:
 
-- ✅ `window.appConfig` → Auto-populado
-- ✅ `window.texts` → Auto-populado
-- ✅ Tempo convertido automaticamente (minutos → segundos)
-- ✅ Textos da UI gerados a partir das configurações
+   - Edite o objeto `window.certificationInfo`
+   - Preencha nome, código, tempo, nota mínima
+   - Use o prompt de IA do guia para automatizar
 
-### Passos para Customização
+2. **Adicione tópicos e questões** em `assets/data/questions-unified.js`:
 
-#### 1️⃣ Configure a Certificação (5-10 minutos)
+   - Defina os tópicos em `window.questionConfig.topics`
+   - Adicione questões em `window.questionBank`
+   - Use os prompts de IA do guia para automatizar
 
-**Arquivo**: `assets/data/config.js`
+3. **Teste no navegador**:
+   - Abra `index.html`
+   - Verifique ambos os idiomas (EN/PT)
 
-Edite apenas o objeto `window.certificationInfo`:
+### 🤖 Automação com IA
 
-```javascript
-window.certificationInfo = {
-  name: {
-    en: "Oracle Certified Professional: Java SE 11",
-    pt: "Oracle Profissional Certificado: Java SE 11",
-  },
-  code: "1Z0-819",
-  provider: "Oracle",
-  exam: {
-    totalQuestions: 50,
-    passingScore: 68,
-    timeLimit: 90, // ⚡ em minutos (auto-convertido para segundos)
-    questionTypes: "Multiple choice",
-  },
-  description: {
-    en: "Master Java SE 11 fundamentals",
-    pt: "Domine os fundamentos do Java SE 11",
-  },
-  welcome: {
-    en: "Welcome to Java SE 11 Practice!",
-    pt: "Bem-vindo à Prática Java SE 11!",
-  },
-  welcomeDescription: {
-    en: "Practice and achieve certification!",
-    pt: "Pratique e conquiste a certificação!",
-  },
-  highlights: {
-    en: [
-      "50 questions covering Java SE 11",
-      "90 minutes exam simulation",
-      "Detailed explanations included",
-      "Track your progress",
-    ],
-    pt: [
-      "50 questões cobrindo Java SE 11",
-      "Simulação de 90 minutos",
-      "Explicações detalhadas incluídas",
-      "Acompanhe seu progresso",
-    ],
-  },
-};
-```
-
-📖 **Guia completo com prompt de IA**: [`docs/CONFIG-GUIDE.md`](docs/CONFIG-GUIDE.md)
-
-#### 2️⃣ Defina os Tópicos (10-15 minutos)
-
-**Arquivo**: `assets/data/questions-unified.js`
-
-```javascript
-window.questionConfig = {
-  topics: {
-    java_fundamentals: {
-      name: "Fundamentos Java",
-      description: "Sintaxe básica e tipos de dados",
-      icon: "☕",
-    },
-    oop_concepts: {
-      name: "POO",
-      description: "Classes, herança e polimorfismo",
-      icon: "🎯",
-    },
-    // ... mais 3-8 tópicos
-  },
-};
-```
-
-#### 3️⃣ Adicione as Questões (30-60 minutos)
-
-**Arquivo**: `assets/data/questions-unified.js`
-
-```javascript
-window.questionBank = [
-  {
-    id: "java_q001",
-    type: "single", // 'single' ou 'multiple'
-    topic: "java_fundamentals",
-    difficulty: "easy", // 'easy', 'medium', 'hard'
-    en: {
-      question: "What is the output?\n\nint x = 5;\nSystem.out.println(x++);",
-      options: ["4", "5", "6", "Error"],
-      correct: [1], // Índice base-0
-      explanation: "Post-increment returns 5, then increments to 6.",
-      tip: "x++ uses then increments, ++x increments then uses.",
-    },
-    pt: {
-      question: "Qual é a saída?\n\nint x = 5;\nSystem.out.println(x++);",
-      options: ["4", "5", "6", "Erro"],
-      correct: [1],
-      explanation: "Pós-incremento retorna 5, depois incrementa para 6.",
-      tip: "x++ usa depois incrementa, ++x incrementa depois usa.",
-    },
-  },
-  // ... mais questões
-];
-```
-
-📖 **Guia completo com prompts de IA**: [`docs/QUESTIONS-GUIDE.md`](docs/QUESTIONS-GUIDE.md)
-
----
-
-## 🤖 Automação com IA
-
-**Tempo total: 30-60 minutos para um simulador completo!**
-
-Use os prompts prontos nos guias de documentação para gerar tudo automaticamente com ChatGPT ou Claude:
-
-### 📝 Configuração da Certificação
-
-- **Onde**: [`docs/CONFIG-GUIDE.md`](docs/CONFIG-GUIDE.md)
-- **O que faz**: Gera `window.certificationInfo` completo
-- **Você fornece**: Nome da certificação
-- **IA retorna**: Código JavaScript pronto para colar
-
-### 📚 Tópicos e Questões
-
-- **Onde**: [`docs/QUESTIONS-GUIDE.md`](docs/QUESTIONS-GUIDE.md)
-- **O que faz**:
-  - Prompt 1: Gera tópicos automaticamente
-  - Prompt 2: Converte suas questões para o formato correto
-- **Você fornece**: Certificação + lista de questões (qualquer formato)
-- **IA retorna**: Código JavaScript bilíngue (EN/PT) pronto para colar
+Todos os guias incluem prompts prontos para ChatGPT/Claude. Veja **[docs/README.md](docs/README.md)** para mais detalhes.
 
 ---
 
 ## 📚 Documentação
 
-### 🇧🇷 Guias em Português (Recomendados)
+Toda a documentação está em português na pasta **[`/docs/`](docs/README.md)**:
 
-1. **[docs/README.md](docs/README.md)** - 📖 Índice completo da documentação
-2. **[docs/CONFIG-GUIDE.md](docs/CONFIG-GUIDE.md)** - ⚙️ Como configurar `config.js` + prompt de automação
-3. **[docs/QUESTIONS-GUIDE.md](docs/QUESTIONS-GUIDE.md)** - 📚 Como criar tópicos e questões + prompts de automação
+- **[docs/README.md](docs/README.md)** - 📖 Índice e visão geral
+- **[docs/CONFIG-GUIDE.md](docs/CONFIG-GUIDE.md)** - ⚙️ Como configurar a certificação + prompt de IA
+- **[docs/QUESTIONS-GUIDE.md](docs/QUESTIONS-GUIDE.md)** - 📚 Como criar tópicos e questões + prompts de IA
 
-### 🎯 Fluxo Recomendado
+### 🎯 Fluxo de Trabalho
 
 ```
-1. Leia docs/CONFIG-GUIDE.md → Use o prompt → Cole em config.js
-                ↓
-2. Leia docs/QUESTIONS-GUIDE.md → Use os prompts → Cole em questions-unified.js
-                ↓
-3. Abra index.html no navegador → Teste e ajuste
+1. Leia docs/README.md (visão geral)
+   ↓
+2. Siga docs/CONFIG-GUIDE.md (configuração)
+   ↓
+3. Siga docs/QUESTIONS-GUIDE.md (questões)
+   ↓
+4. Teste no navegador (index.html)
 ```
 
 ---
@@ -438,6 +329,6 @@ Usando este simulador? Compartilhe conosco!
 
 ---
 
-**v1.0.0** • Outubro 2025 • [CC BY-NC 4.0 License](LICENSE)
+**v2.0.0** • Janeiro 2025 • [CC BY-NC 4.0 License](LICENSE)
 
 </div>
