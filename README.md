@@ -329,6 +329,6 @@ Usando este simulador? Compartilhe conosco!
 
 ---
 
-**v2.0.0** • Janeiro 2025 • [CC BY-NC 4.0 License](LICENSE)
+**v1.0.1** • Janeiro 2025 • [CC BY-NC 4.0 License](LICENSE)
 
 </div>
