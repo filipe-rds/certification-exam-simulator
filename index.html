@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-text="page-title">Certification Exam Simulator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-controls">
+                <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" aria-label="Toggle theme">
+                    🌙
+                </button>
+                <div class="language-selector">
+                    <select class="language-dropdown" id="languageDropdown" onchange="setLanguage(this.value)">
+                        <option value="en">🇺🇸 English</option>
+                        <option value="pt">🇧🇷 Português</option>
+                    </select>
+                </div>
+            </div>
+            <h1 data-text="main-title">Certification Exam Simulator</h1>
+            <p data-text="subtitle">Practice with real exam questions and test your knowledge</p>
+        </div>
+
+        <div id="startScreen" class="start-screen">
+            <h2 data-text="welcome-title">Welcome to the Practice Simulator!</h2>
+            <p data-text="welcome-description">Practice with questions and aim for a passing score!</p>
+            <div class="quiz-info">
+                <h3 data-text="quiz-info-title">📋 Simulator Information:</h3>
+                <ul id="quizInfoList">
+                    <li data-text="quiz-info-1">Multiple choice questions per session</li>
+                    <li data-text="quiz-info-2">Questions are randomized for each attempt</li>
+                    <li data-text="quiz-info-3">Detailed feedback and explanations provided</li>
+                    <li data-text="quiz-info-4">Track your progress and improve over time</li>
+                </ul>
+            </div>
+            <button class="btn" onclick="startQuiz()" data-text="start-quiz">🚀 Start Simulator</button>
+            <button class="btn" onclick="showReusabilityGuide()" data-text="reusability-guide-btn">📖 How to
+                Customize</button>
+            <button class="btn" onclick="showScoreHistory()" id="scoreHistoryBtn" data-text="score-history-btn">📊 Score
+                History</button>
+            <div class="footer-signature" style="text-align:center; margin-top: 24px; color: #bbb; font-size: 0.98rem;"
+                data-text="footer-signature">
+                Powered by Modern Web Technologies
+            </div>
+        </div>
+
+        <div id="quizContent" style="display: none;">
+            <div class="quiz-controls">
+                <div class="timer">⏱️ <span id="timeLeft">60:00</span></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div><span id="questionTypeTag"></span> <span data-text="question-label">Question</span> <span
+                        id="currentQuestion">1</span> <span data-text="of">of</span> <span id="totalQuestions">25</span>
+                </div>
+            </div>
+            <div class="question-container">
+                <div>
+                    <div class="question-number"><span data-text="question-label">Question</span> <span
+                            id="questionNum">1</span></div>
+                    <div class="question" id="questionText"></div>
+                    <div id="multiSelectInstruction" class="multi-select-instruction" style="display: none;"></div>
+                    <div class="options" id="optionsContainer"></div>
+                </div>
+                <div class="explanation" id="explanation" style="display: none;"></div>
+                <div class="tip" id="tip" style="display: none;">
+                    <div class="tip-title" data-text="tip-title">💡 Strategy Tip:</div>
+                    <div id="tipText"></div>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="btn" id="prevBtn" onclick="previousQuestion()" disabled data-text="previous">⬅️
+                    Previous</button>
+                <button class="btn next" id="nextBtn" onclick="nextQuestion()" disabled data-text="next">Next
+                    ➡️</button>
+                <button class="btn" id="finishBtn" onclick="finishQuiz()" style="display: none;" data-text="finish">🏁
+                    Finish</button>
+                <button class="btn" onclick="restartQuiz()" data-text="cancel-btn">❌ Cancel</button>
+            </div>
+        </div>
+
+        <div id="results" style="display: none;">
+            <div class="results">
+                <h2 data-text="completed">🎉 Simulator Completed!</h2>
+                <div class="score" id="finalScore">0%</div>
+                <div class="score-details">
+                    <div class="score-card">
+                        <h3 data-text="correct-label">Correct</h3>
+                        <p id="correctCount">0</p>
+                    </div>
+                    <div class="score-card">
+                        <h3 data-text="incorrect-label">Incorrect</h3>
+                        <p id="incorrectCount">0</p>
+                    </div>
+                    <div class="score-card">
+                        <h3 data-text="time-used">Total Time</h3>
+                        <p id="timeUsed">00:00</p>
+                    </div>
+                    <div class="score-card">
+                        <h3 data-text="status">Status</h3>
+                        <p id="passStatus">-</p>
+                    </div>
+                </div>
+                <button class="btn" onclick="viewDetailedResults()" data-text="view-details">🔍 View Detailed
+                    Results</button>
+                <button class="btn" onclick="restartQuiz()" data-text="restart">🔄 Try Again</button>
+                <button class="btn" onclick="restartQuiz()" data-text="back-to-home">🏠 Back to Home</button>
+            </div>
+        </div>
+
+        <div id="detailedResults" style="display: none; padding: 40px;">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6" data-text="detailed-results-title">Detailed Results</h2>
+            <div id="detailedResultsContent"></div>
+            <button class="btn mt-8" onclick="hideDetailedResults()" data-text="back-to-summary">⬅️ Back to
+                Summary</button>
+        </div>
+    </div>
+    <div id="scoreHistoryModal" class="score-history-modal">
+        <div class="score-history-overlay" onclick="closeScoreHistory()"></div>
+        <div class="score-history-content">
+            <div class="score-history-header">
+                <h3 data-text="history-title">📊 Last 3 Scores</h3>
+                <button class="close-modal-btn" onclick="closeScoreHistory()" aria-label="Close">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div id="scoreHistoryContent" class="score-history-body"></div>
+            <div class="score-history-footer">
+                <button class="btn" onclick="closeScoreHistory()" data-text="close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customization Guide Modal -->
+    <div id="customizationGuideModal" class="score-history-modal">
+        <div class="score-history-overlay" onclick="closeReusabilityGuide()"></div>
+        <div class="score-history-content" style="max-width: 800px;">
+            <div class="score-history-header">
+                <h3 data-text="guide-title">📖 Customization Guide</h3>
+                <button class="close-modal-btn" onclick="closeReusabilityGuide()" aria-label="Close">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div id="customizationGuideContent" class="score-history-body"></div>
+            <div class="score-history-footer">
+                <button class="btn" onclick="closeReusabilityGuide()" data-text="close-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/data/config.js"></script>
+    <script src="assets/data/questions-unified.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+
+</html>
