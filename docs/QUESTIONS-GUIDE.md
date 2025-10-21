@@ -53,23 +53,32 @@ O arquivo `questions-unified.js` contém 2 objetos principais:
 
 ## 🎯 PARTE 1: Configurar Tópicos
 
-### Estrutura dos Tópicos
+### Estrutura dos Tópicos (Bilíngue)
 
 ```javascript
 window.questionConfig = {
   topics: {
-    // Chave do tópico (use snake_case)
-    nome_do_topico: {
-      name: "Nome do Tópico",
-      description: "Descrição breve (máx 60 caracteres)",
-      icon: "📚", // Emoji representativo
+    topic_key: {
+      name: {
+        en: "Topic Name in English",
+        pt: "Nome do Tópico em Português",
+      },
+      description: {
+        en: "Description in English (max 60 chars)",
+        pt: "Descrição em Português (máx 60 caracteres)",
+      },
+      icon: "📚",
     },
-
-    // Exemplo completo:
-    java_fundamentals: {
-      name: "Fundamentos Java",
-      description: "Sintaxe básica, tipos de dados e operadores",
-      icon: "☕",
+    another_topic: {
+      name: {
+        en: "Another Topic",
+        pt: "Outro Tópico",
+      },
+      description: {
+        en: "Another description",
+        pt: "Outra descrição",
+      },
+      icon: "🔧",
     },
   },
 };
@@ -78,10 +87,21 @@ window.questionConfig = {
 ### Regras para Tópicos
 
 - **Chave**: Use `snake_case` (ex: `java_fundamentals`, `oop_concepts`)
-- **Name**: Nome descritivo (2-4 palavras)
-- **Description**: Uma frase curta (máx 60 caracteres)
-- **Icon**: Um emoji relevante
+- **Name**: Objeto bilíngue com `en` e `pt` (2-4 palavras cada)
+- **Description**: Objeto bilíngue com `en` e `pt` (máx 60 caracteres cada)
+- **Icon**: Um emoji relevante (mesmo para ambos os idiomas)
 - **Quantidade**: Entre 5-10 tópicos é ideal
+
+### ✨ Suporte Bilíngue Automático
+
+Quando o usuário troca de idioma (EN ↔ PT), os nomes e descrições dos tópicos são automaticamente traduzidos em:
+
+- 📊 Análise de desempenho por tópico
+- 📈 Resultados detalhados
+- 🏆 Histórico de pontuações
+- 📚 Recomendações de estudo
+
+**Compatibilidade**: O formato antigo (string simples) ainda é suportado, mas o formato bilíngue é recomendado para melhor experiência do usuário.
 
 ---
 
@@ -205,7 +225,7 @@ Use os prompts abaixo para gerar tópicos e questões automaticamente com ChatGP
 **Copie e cole este prompt:**
 
 ````markdown
-Você é um especialista em criar simuladores de certificação. Preciso que você gere os tópicos (topics) para o meu banco de questões.
+Você é um especialista em criar simuladores de certificação. Preciso que você gere os tópicos (topics) para o meu banco de questões com suporte bilíngue.
 
 **CERTIFICAÇÃO**: [Nome e código da certificação - ex: Oracle Java SE 11 (1Z0-819)]
 
@@ -216,29 +236,43 @@ Você é um especialista em criar simuladores de certificação. Preciso que voc
 3. Gere o objeto `window.questionConfig.topics` completo
 4. Use nomes descritivos e emojis relevantes
 5. Mantenha descrições curtas (máx 60 caracteres)
+6. **Forneça AMBAS as versões**: inglês (`en`) e português (`pt`)
 
 **REGRAS**:
 
 - Chaves em `snake_case` (ex: `java_fundamentals`, `oop_concepts`)
-- Name: 2-4 palavras descritivas
-- Description: Uma frase curta (máx 60 caracteres)
+- Name: Objeto bilíngue com 2-4 palavras descritivas em cada idioma
+- Description: Objeto bilíngue com frases curtas (máx 60 caracteres cada)
 - Icon: Emoji representativo do tema
 - Quantidade: Entre 5-10 tópicos
+- **CRÍTICO**: Cada tópico DEVE ter `name` e `description` com `en` e `pt`
 
 **FORMATO DE SAÍDA**:
 
 ```javascript
 window.questionConfig = {
   topics: {
-    topico_1: {
-      name: "Nome do Tópico",
-      description: "Descrição curta do que será coberto",
+    topic_key: {
+      name: {
+        en: "English Topic Name",
+        pt: "Nome do Tópico em Português",
+      },
+      description: {
+        en: "Brief English description (max 60 chars)",
+        pt: "Breve descrição em português (máx 60 caracteres)",
+      },
       icon: "📚",
     },
-    topico_2: {
-      name: "Outro Tópico",
-      description: "Outra descrição curta",
-      icon: "🎯",
+    another_topic: {
+      name: {
+        en: "Another Topic",
+        pt: "Outro Tópico",
+      },
+      description: {
+        en: "Another brief description",
+        pt: "Outra descrição breve",
+      },
+      icon: "🔧",
     },
     // ... mais tópicos
   },
@@ -251,18 +285,36 @@ window.questionConfig = {
 window.questionConfig = {
   topics: {
     java_fundamentals: {
-      name: "Fundamentos Java",
-      description: "Sintaxe básica, tipos de dados e operadores",
-      icon: "☕",
+      name: {
+        en: "Java Fundamentals",
+        pt: "Fundamentos de Java",
+      },
+      description: {
+        en: "Basic syntax, data types, operators",
+        pt: "Sintaxe básica, tipos de dados, operadores",
+      },
+      icon: "📚",
     },
     oop_concepts: {
-      name: "POO",
-      description: "Classes, herança, polimorfismo, encapsulamento",
+      name: {
+        en: "Object-Oriented Programming",
+        pt: "Programação Orientada a Objetos",
+      },
+      description: {
+        en: "Classes, inheritance, polymorphism, encapsulation",
+        pt: "Classes, herança, polimorfismo, encapsulamento",
+      },
       icon: "🎯",
     },
-    collections: {
-      name: "Collections",
-      description: "Lists, Sets, Maps e operações de coleção",
+    collections_api: {
+      name: {
+        en: "Collections Framework",
+        pt: "Framework de Coleções",
+      },
+      description: {
+        en: "Lists, Sets, Maps, and their implementations",
+        pt: "Listas, Sets, Maps e suas implementações",
+      },
       icon: "📦",
     },
   },
@@ -673,9 +725,12 @@ window.questionBank = [
 
 - [ ] Entre 5-10 tópicos definidos
 - [ ] Chaves em snake_case
-- [ ] Nomes descritivos (2-4 palavras)
-- [ ] Descrições curtas (máx 60 chars)
+- [ ] **Nomes bilíngues**: `name: { en: "...", pt: "..." }`
+- [ ] **Descrições bilíngues**: `description: { en: "...", pt: "..." }`
+- [ ] Nomes descritivos (2-4 palavras em cada idioma)
+- [ ] Descrições curtas (máx 60 chars em cada idioma)
 - [ ] Emojis relevantes
+- [ ] Traduções de qualidade (não apenas literal)
 
 ### Para Questões:
 
@@ -687,6 +742,11 @@ window.questionBank = [
 - [ ] Versões EN e PT completas
 - [ ] Explicações educativas (2-3 frases)
 - [ ] Dicas estratégicas úteis
+- [ ] Sem erros de sintaxe JavaScript
+- [ ] NÃO incluir propriedade 'difficulty' (opcional)
+
+---
+
 - [ ] Sem erros de sintaxe JavaScript
 - [ ] NÃO incluir propriedade 'difficulty' (opcional)
 
@@ -779,12 +839,18 @@ window.questionBank = [ ... ];
 ## 🎯 Exemplo Completo Mínimo
 
 ```javascript
-// ========== TÓPICOS ==========
+// ========== TÓPICOS (FORMATO BILÍNGUE - RECOMENDADO) ==========
 window.questionConfig = {
   topics: {
     fundamentals: {
-      name: "Fundamentos",
-      description: "Conceitos básicos e sintaxe",
+      name: {
+        en: "Fundamentals",
+        pt: "Fundamentos",
+      },
+      description: {
+        en: "Basic concepts and syntax",
+        pt: "Conceitos básicos e sintaxe",
+      },
       icon: "📚",
     },
   },
@@ -814,6 +880,47 @@ window.questionBank = [
 ];
 ```
 
+### 📌 Compatibilidade com Formato Antigo
+
+Se você já tem tópicos no formato antigo (string simples), eles ainda funcionam:
+
+```javascript
+// ✅ FORMATO ANTIGO (ainda suportado)
+window.questionConfig = {
+  topics: {
+    fundamentals: {
+      name: "Fundamentals",
+      description: "Basic concepts and syntax",
+      icon: "📚",
+    },
+  },
+};
+
+// ⭐ FORMATO NOVO (bilíngue - recomendado)
+window.questionConfig = {
+  topics: {
+    fundamentals: {
+      name: {
+        en: "Fundamentals",
+        pt: "Fundamentos",
+      },
+      description: {
+        en: "Basic concepts and syntax",
+        pt: "Conceitos básicos e sintaxe",
+      },
+      icon: "📚",
+    },
+  },
+};
+```
+
+**💡 Vantagem do formato bilíngue**: Quando o usuário troca de idioma, os nomes dos tópicos são traduzidos automaticamente na análise de desempenho e histórico!
+},
+];
+
+```
+
 ---
 
 **Dúvidas?** Consulte `docs/CONFIG-GUIDE.md` ou os exemplos em `/docs/`
+```

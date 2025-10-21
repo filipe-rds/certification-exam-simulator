@@ -6,8 +6,13 @@
  * 🤖 AI AUTOMATION: Use the prompts in docs/QUESTIONS-GUIDE.md to generate topics and questions
  * 
  * STRUCTURE:
- * 1. window.questionConfig.topics - Define your exam topics/areas
+ * 1. window.questionConfig.topics - Define your exam topics/areas (BILINGUAL SUPPORT)
  * 2. window.questionBank - Add your bilingual questions
+ * 
+ * TOPIC PROPERTIES (Bilingual):
+ * - name: { en: "English Name", pt: "Nome em Português" }
+ * - description: { en: "English description", pt: "Descrição em português" }
+ * - icon: '📚' (emoji icon for visual identification)
  * 
  * QUESTION PROPERTIES:
  * - id: unique identifier (format: topic_q###)
@@ -19,22 +24,40 @@
  */
 
 // Question metadata - Topics for performance analysis
-// CUSTOMIZE THIS: Define your exam topics
+// CUSTOMIZE THIS: Define your exam topics with bilingual support
 window.questionConfig = {
     topics: {
         topic1: {
-            name: 'Topic 1',
-            description: 'First subject area description',
+            name: {
+                en: 'Topic 1',
+                pt: 'Tópico 1'
+            },
+            description: {
+                en: 'First subject area description',
+                pt: 'Descrição da primeira área temática'
+            },
             icon: '📚'
         },
         topic2: {
-            name: 'Topic 2',
-            description: 'Second subject area description',
+            name: {
+                en: 'Topic 2',
+                pt: 'Tópico 2'
+            },
+            description: {
+                en: 'Second subject area description',
+                pt: 'Descrição da segunda área temática'
+            },
             icon: '🔧'
         },
         topic3: {
-            name: 'Topic 3',
-            description: 'Third subject area description',
+            name: {
+                en: 'Topic 3',
+                pt: 'Tópico 3'
+            },
+            description: {
+                en: 'Third subject area description',
+                pt: 'Descrição da terceira área temática'
+            },
             icon: '🎯'
         }
     }

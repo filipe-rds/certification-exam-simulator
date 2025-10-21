@@ -737,6 +737,31 @@ function calculateTopicPerformance(questions, answers) {
     return topicStats;
 }
 
+// Get localized topic info (supports bilingual topic names and descriptions)
+function getLocalizedTopicInfo(topicKey, language) {
+    const topics = window.questionConfig?.topics || {};
+    const topicInfo = topics[topicKey];
+
+    if (!topicInfo) {
+        return { name: topicKey, icon: '📌', description: '' };
+    }
+
+    // Support both old format (string) and new format (object with en/pt)
+    const name = typeof topicInfo.name === 'object'
+        ? (topicInfo.name[language] || topicInfo.name.en || topicInfo.name.pt || topicKey)
+        : topicInfo.name;
+
+    const description = typeof topicInfo.description === 'object'
+        ? (topicInfo.description[language] || topicInfo.description.en || topicInfo.description.pt || '')
+        : (topicInfo.description || '');
+
+    return {
+        name: name,
+        description: description,
+        icon: topicInfo.icon || '📌'
+    };
+}
+
 // Display topic performance chart
 function displayTopicAnalysis() {
     // Check if topics are defined
@@ -745,7 +770,6 @@ function displayTopicAnalysis() {
     }
 
     const topicPerformance = JSON.parse(sessionStorage.getItem('topicPerformance') || '{}');
-    const topics = window.questionConfig?.topics || {};
     const texts = window.texts?.[currentLanguage] || window.texts?.en || {};
 
     if (Object.keys(topicPerformance).length === 0) return '';
@@ -766,7 +790,7 @@ function displayTopicAnalysis() {
         .sort((a, b) => a[1].percentage - b[1].percentage);
 
     sortedTopics.forEach(([topicKey, stats]) => {
-        const topicInfo = topics[topicKey] || { name: topicKey, icon: '📌', description: '' };
+        const topicInfo = getLocalizedTopicInfo(topicKey, currentLanguage);
         const percentage = stats.percentage;
         let barColor, statusText, statusColor;
 
@@ -830,7 +854,7 @@ function displayTopicAnalysis() {
                 </p>
                 <ul style="color: var(--text-primary); margin-left: 20px; line-height: 1.8;">
                     ${needsImprovement.map(([topicKey]) => {
-            const topicInfo = topics[topicKey] || { name: topicKey, icon: '📌' };
+            const topicInfo = getLocalizedTopicInfo(topicKey, currentLanguage);
             return `<li>${topicInfo.icon} <strong>${topicInfo.name}</strong> - ${topicInfo.description}</li>`;
         }).join('')}
                 </ul>
@@ -846,7 +870,7 @@ function displayTopicAnalysis() {
                 </h4>
                 <ul style="color: var(--text-primary); margin-left: 20px; line-height: 1.8;">
                     ${strongAreas.map(([topicKey]) => {
-            const topicInfo = topics[topicKey] || { name: topicKey, icon: '📌' };
+            const topicInfo = getLocalizedTopicInfo(topicKey, currentLanguage);
             return `<li>${topicInfo.icon} <strong>${topicInfo.name}</strong></li>`;
         }).join('')}
                 </ul>
@@ -893,52 +917,135 @@ function showReusabilityGuide() {
 
     content.innerHTML = `
         <div style="padding: 20px 40px;">
-            <p style="margin-bottom:24px;color:var(--text-secondary);line-height:1.7;font-size:1.05em;">${texts['guide-intro'] || 'This tutorial shows how to adapt the simulator...'}</p>
+            <p style="margin-bottom:24px;color:var(--text-secondary);line-height:1.7;font-size:1.05em;">
+                ${texts['guide-intro'] || 'This guide shows you how to customize this simulator for your own certification exam. Follow the steps below or check the detailed documentation in the /docs/ folder.'}
+            </p>
             
             <div style="margin-bottom: 24px;">
-                <h4 style="color:var(--purple-light);font-weight:600;margin-bottom:12px;font-size:1.15em;">${texts['guide-step1-title'] || '1. Change title and main texts:'}</h4>
-                <p style="color:var(--text-secondary);line-height:1.6;">${texts['guide-step1-desc'] || 'In the assets/data/config.js file...'}</p>
+                <h4 style="color:var(--purple-light);font-weight:600;margin-bottom:12px;font-size:1.15em;">
+                    📖 ${texts['guide-documentation-title'] || 'Complete Documentation'}
+                </h4>
+                <p style="color:var(--text-secondary);line-height:1.6;margin-bottom:12px;">
+                    ${texts['guide-documentation-desc'] || 'All detailed guides with AI automation prompts are available in the /docs/ folder:'}
+                </p>
+                <ul style="margin:0 0 12px 24px;padding:0;color:var(--text-primary);line-height:2;">
+                    <li><strong>docs/README.md</strong> - ${texts['guide-docs-readme'] || 'Documentation index and workflow'}</li>
+                    <li><strong>docs/CONFIG-GUIDE.md</strong> - ${texts['guide-docs-config'] || 'How to configure the certification (5-10 min)'}</li>
+                    <li><strong>docs/QUESTIONS-GUIDE.md</strong> - ${texts['guide-docs-questions'] || 'How to add topics and questions (30-60 min)'}</li>
+                </ul>
             </div>
 
             <div style="margin-bottom: 24px;">
-                <h4 style="color:var(--purple-light);font-weight:600;margin-bottom:12px;font-size:1.15em;">${texts['guide-step2-title'] || '2. Configure quiz settings:'}</h4>
-                <p style="color:var(--text-secondary);line-height:1.6;margin-bottom:12px;">${texts['guide-step2-desc'] || 'In the assets/data/config.js file...'}</p>
-                <pre style="background:var(--bg-darker);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.85em;border:1px solid var(--border-color);color:var(--text-primary);">quiz: {
-    totalQuestions: 25,
+                <h4 style="color:var(--purple-light);font-weight:600;margin-bottom:12px;font-size:1.15em;">
+                    ⚡ ${texts['guide-quick-start-title'] || 'Quick Start - Only ~30 Lines to Edit!'}
+                </h4>
+                <p style="color:var(--text-secondary);line-height:1.6;margin-bottom:12px;">
+                    ${texts['guide-quick-start-desc'] || 'The simulator uses a modular approach - you only need to edit 2 files:'}
+                </p>
+            </div>
+
+            <div style="margin-bottom: 24px;">
+                <h4 style="color:var(--purple-light);font-weight:600;margin-bottom:12px;font-size:1.15em;">
+                    1️⃣ ${texts['guide-step1-title'] || 'Configure Certification (assets/data/config.js)'}
+                </h4>
+                <p style="color:var(--text-secondary);line-height:1.6;margin-bottom:12px;">
+                    ${texts['guide-step1-desc'] || 'Edit only the window.certificationInfo object (~30 lines):'}
+                </p>
+                <pre style="background:var(--bg-darker);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.85em;border:1px solid var(--border-color);color:var(--text-primary);">window.certificationInfo = {
+  name: { en: "Your Certification", pt: "Sua Certificação" },
+  code: "CERT-001",
+  provider: "Provider Name",
+  exam: {
+    totalQuestions: 50,
     passingScore: 70,
-    timeLimit: 3600
-}</pre>
+    timeLimit: 90 // in minutes
+  },
+  // ... more fields (see docs/CONFIG-GUIDE.md)
+};</pre>
+                <p style="color:var(--purple-light);margin-top:8px;font-size:0.9em;">
+                    💡 ${texts['guide-step1-tip'] || 'Use the AI prompt in docs/CONFIG-GUIDE.md to generate this automatically!'}
+                </p>
             </div>
 
             <div style="margin-bottom: 24px;">
-                <h4 style="color:var(--purple-light);font-weight:600;margin-bottom:12px;font-size:1.15em;">${texts['guide-step3-title'] || '3. Edit question bank:'}</h4>
-                <p style="color:var(--text-secondary);line-height:1.6;">${texts['guide-step3-desc'] || 'In the assets/data/questions-unified.js file...'}</p>
+                <h4 style="color:var(--purple-light);font-weight:600;margin-bottom:12px;font-size:1.15em;">
+                    2️⃣ ${texts['guide-step2-title'] || 'Add Topics & Questions (assets/data/questions-unified.js)'}
+                </h4>
+                <p style="color:var(--text-secondary);line-height:1.6;margin-bottom:12px;">
+                    ${texts['guide-step2-desc'] || 'Define your topics and add bilingual questions:'}
+                </p>
+                <pre style="background:var(--bg-darker);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.85em;border:1px solid var(--border-color);color:var(--text-primary);">// 1. Define topics
+window.questionConfig = {
+  topics: {
+    topic_key: {
+      name: "Topic Name",
+      description: "Brief description",
+      icon: "📚"
+    }
+  }
+};
+
+// 2. Add questions
+window.questionBank = [
+  {
+    id: "topic_q001",
+    type: "single", // or "multiple"
+    topic: "topic_key",
+    en: { question: "...", options: [...], correct: [1], ... },
+    pt: { question: "...", options: [...], correct: [1], ... }
+  }
+];</pre>
+                <p style="color:var(--purple-light);margin-top:8px;font-size:0.9em;">
+                    💡 ${texts['guide-step2-tip'] || 'Use the 2 AI prompts in docs/QUESTIONS-GUIDE.md to generate this automatically!'}
+                </p>
             </div>
 
             <div style="margin-bottom: 24px;">
-                <h4 style="color:var(--purple-light);font-weight:600;margin-bottom:12px;font-size:1.15em;">${texts['guide-step4-title'] || '4. Configure categories:'}</h4>
-                <p style="color:var(--text-secondary);line-height:1.6;">${texts['guide-step4-desc'] || 'In the questions-unified.js file...'}</p>
+                <h4 style="color:var(--purple-light);font-weight:600;margin-bottom:12px;font-size:1.15em;">
+                    🤖 ${texts['guide-ai-automation-title'] || 'AI Automation (Recommended!)'}
+                </h4>
+                <p style="color:var(--text-secondary);line-height:1.6;">
+                    ${texts['guide-ai-automation-desc'] || 'Both guides include ready-to-use prompts for ChatGPT/Claude:'}
+                </p>
+                <ul style="margin:8px 0 0 24px;padding:0;color:var(--text-primary);line-height:2;">
+                    <li>🎯 <strong>Prompt 1:</strong> ${texts['guide-ai-prompt1'] || 'Generate topics automatically'}</li>
+                    <li>📝 <strong>Prompt 2:</strong> ${texts['guide-ai-prompt2'] || 'Convert questions to bilingual format'}</li>
+                    <li>⚡ ${texts['guide-ai-time'] || 'Total time: 30-60 minutes vs 2-4 hours manually!'}</li>
+                </ul>
             </div>
 
             <div style="margin-bottom: 24px;">
-                <h4 style="color:var(--purple-light);font-weight:600;margin-bottom:12px;font-size:1.15em;">${texts['guide-step5-title'] || '5. Customize visual theme:'}</h4>
-                <p style="color:var(--text-secondary);line-height:1.6;">${texts['guide-step5-desc'] || 'In the assets/css/style.css file...'}</p>
-            </div>
-
-            <div style="margin-bottom: 24px;">
-                <h4 style="color:var(--purple-light);font-weight:600;margin-bottom:12px;font-size:1.15em;">${texts['guide-step6-title'] || '6. Test the simulator:'}</h4>
-                <p style="color:var(--text-secondary);line-height:1.6;">${texts['guide-step6-desc'] || 'Open index.html in your browser...'}</p>
+                <h4 style="color:var(--purple-light);font-weight:600;margin-bottom:12px;font-size:1.15em;">
+                    3️⃣ ${texts['guide-step3-title'] || 'Test Your Simulator'}
+                </h4>
+                <p style="color:var(--text-secondary);line-height:1.6;">
+                    ${texts['guide-step3-desc'] || 'Open index.html in your browser and test both languages (EN/PT). All changes are auto-applied!'}
+                </p>
             </div>
 
             <div style="margin-top:24px;padding:20px;background:linear-gradient(135deg, rgba(130, 87, 229, 0.1), rgba(130, 87, 229, 0.05));border-left:4px solid var(--purple-primary);border-radius:8px;border:1px solid rgba(130, 87, 229, 0.2);">
-                <strong style="color:var(--purple-primary);font-size:1.1em;display:block;margin-bottom:12px;">${texts['guide-resources-title'] || '💡 Available Features:'}</strong>
+                <strong style="color:var(--purple-primary);font-size:1.1em;display:block;margin-bottom:12px;">
+                    ✨ ${texts['guide-features-title'] || 'Key Features:'}
+                </strong>
                 <ul style="margin:0;padding-left:24px;color:var(--text-secondary);line-height:2;">
-                    ${(texts['guide-resources'] || []).map(resource => `<li>${resource}</li>`).join('')}
+                    <li>🌍 ${texts['guide-feature1'] || 'Bilingual interface (EN/PT) with instant switching'}</li>
+                    <li>📊 ${texts['guide-feature2'] || 'Topic-based performance analysis with charts'}</li>
+                    <li>🎨 ${texts['guide-feature3'] || 'Dark/Light theme with smooth transitions'}</li>
+                    <li>📱 ${texts['guide-feature4'] || '100% responsive - works on all devices'}</li>
+                    <li>💾 ${texts['guide-feature5'] || 'Score history with topic breakdown'}</li>
+                    <li>⏱️ ${texts['guide-feature6'] || 'Countdown timer and progress tracking'}</li>
+                    <li>🎯 ${texts['guide-feature7'] || 'Single & multiple choice questions support'}</li>
+                    <li>💡 ${texts['guide-feature8'] || 'Detailed explanations and strategy tips'}</li>
                 </ul>
             </div>
 
             <div style="margin-top:20px;padding:16px;background:var(--bg-dark);border-radius:8px;text-align:center;border:1px solid var(--border-color);">
-                <p style="margin:0;color:var(--text-secondary);font-size:0.95em;">${texts['guide-help'] || 'Need help? Check the documentation!'}</p>
+                <p style="margin:0 0 8px 0;color:var(--text-primary);font-size:1em;font-weight:600;">
+                    📚 ${texts['guide-help-title'] || 'Need Help?'}
+                </p>
+                <p style="margin:0;color:var(--text-secondary);font-size:0.95em;">
+                    ${texts['guide-help'] || 'Check the /docs/ folder for complete guides with AI automation prompts!'}
+                </p>
             </div>
         </div>
     `;
@@ -1006,7 +1113,6 @@ function showScoreHistory() {
             let topicAnalysisHTML = '';
             if (score.topicPerformance && Object.keys(score.topicPerformance).length > 0) {
                 const topicPerf = score.topicPerformance;
-                const topics = window.questionConfig?.topics || {};
 
                 topicAnalysisHTML = `
                     <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color);">
@@ -1015,9 +1121,7 @@ function showScoreHistory() {
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 8px;">
                             ${Object.entries(topicPerf).map(([topicKey, stats]) => {
-                    const topic = topics[topicKey] || {};
-                    const topicName = topic.name || topicKey;
-                    const topicIcon = topic.icon || '📊';
+                    const topicInfo = getLocalizedTopicInfo(topicKey, currentLanguage);
                     const percentage = stats.percentage.toFixed(0);
 
                     let barColor = '#ef4444'; // red for < 50%
@@ -1030,7 +1134,7 @@ function showScoreHistory() {
                     return `
                                     <div style="font-size: 0.8em;">
                                         <div style="display: flex; justify-content: space-between; margin-bottom: 3px; align-items: center; flex-wrap: wrap; gap: 4px;">
-                                            <span style="color: var(--text-primary);">${topicIcon} ${topicName}</span>
+                                            <span style="color: var(--text-primary);">${topicInfo.icon} ${topicInfo.name}</span>
                                             <span style="font-weight: 700; color: ${barColor};">${percentage}%</span>
                                         </div>
                                         <div style="background: var(--bg-darker); border-radius: 4px; height: 6px; overflow: hidden; border: 1px solid var(--border-color);">
@@ -1095,6 +1199,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     applyLanguage();
     renderHistory();
+
+    // Control customization guide button visibility
+    const customizationGuideBtn = document.getElementById('customizationGuideBtn');
+    if (customizationGuideBtn) {
+        const showGuide = window.appConfig?.features?.showCustomizationGuide;
+        if (showGuide === false) {
+            customizationGuideBtn.style.display = 'none';
+        }
+    }
 });
 
 window.startQuiz = startQuiz;

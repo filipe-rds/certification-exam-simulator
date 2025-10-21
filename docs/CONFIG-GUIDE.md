@@ -69,6 +69,43 @@ window.certificationInfo = {
 
 ---
 
+## ⚙️ Configurações Opcionais do window.appConfig
+
+Além do `window.certificationInfo`, você pode customizar algumas funcionalidades avançadas em `window.appConfig.features`:
+
+```javascript
+window.appConfig = {
+  // ... outras configurações (não modificar)
+  features: {
+    scoreHistory: true, // Habilitar histórico de pontuações
+    detailedResults: true, // Mostrar resultados detalhados
+    showCustomizationGuide: true, // Mostrar botão "Como Personalizar"
+  },
+};
+```
+
+### Quando modificar `showCustomizationGuide`:
+
+- **`true` (padrão)**: Mostra o botão "📖 Como Personalizar" na tela inicial
+  - 👍 Ideal durante desenvolvimento/personalização
+  - 👍 Útil para quem está aprendendo a usar o simulador
+- **`false`**: Oculta o botão "📖 Como Personalizar"
+  - 👍 Ideal para simuladores finalizados em produção
+  - 👍 Interface mais limpa para usuários finais
+  - 💡 Recomendado após você concluir a personalização
+
+**Exemplo**: Se você já personalizou o simulador e quer uma interface mais profissional:
+
+```javascript
+features: {
+  scoreHistory: true,
+  detailedResults: true,
+  showCustomizationGuide: false  // ← Oculta o botão de customização
+}
+```
+
+---
+
 ## 🤖 PROMPT DE AUTOMAÇÃO (Use com ChatGPT/Claude)
 
 Copie e cole este prompt para gerar a configuração automaticamente:
