@@ -291,6 +291,60 @@ window.questionConfig = {
 
 **📌 Pré-requisito**: Execute o PROMPT 1 primeiro para ter os tópicos definidos!
 
+**📎 Formatos Aceitos**:
+
+- ✅ Texto colado diretamente no prompt
+- ✅ Arquivo PDF anexado
+- ✅ Documento Word/Google Docs anexado
+- ✅ Planilha Excel/Google Sheets anexada
+- ✅ Imagem de questões (screenshot) anexada
+- ✅ Arquivo TXT ou qualquer formato de texto
+
+### 📖 Como Usar Este Prompt
+
+Você tem **DUAS OPÇÕES** para fornecer as questões:
+
+#### 📌 OPÇÃO 1: Colar Texto Diretamente
+
+```
+👍 Use quando:
+- Você tem poucas questões (< 20)
+- As questões já estão em formato texto
+- Você quer rapidez e simplicidade
+
+📝 Como fazer:
+1. Copie o prompt abaixo
+2. Cole suas questões na seção "QUESTÕES PARA CONVERTER"
+3. Execute na sua IA favorita (ChatGPT, Claude, etc.)
+```
+
+#### 📎 OPÇÃO 2: Anexar Arquivo(s)
+
+```
+👍 Use quando:
+- Você tem muitas questões (> 20)
+- As questões estão em PDF, Word, Excel
+- As questões estão em imagens/screenshots
+- Você quer processar múltiplos arquivos de uma vez
+
+📎 Como fazer:
+1. Copie o prompt abaixo
+2. Cole na sua IA (ChatGPT, Claude com suporte a anexos)
+3. Anexe os arquivos com 📎 (botão de anexar)
+4. Execute o prompt
+```
+
+**💡 Dica Pro**: Você pode usar AMBAS as opções ao mesmo tempo! Cole algumas questões E anexe arquivos.
+
+**🤖 Ferramentas de IA Compatíveis**:
+
+- ✅ **ChatGPT** (GPT-4 ou superior) - Suporta anexos de arquivos
+- ✅ **Claude** (Anthropic) - Suporta anexos de arquivos e imagens
+- ✅ **Gemini** (Google) - Suporta anexos de arquivos
+- ⚠️ Modelos gratuitos podem ter limitações em processamento de arquivos
+
+---
+
 **Copie e cole este prompt:**
 
 ````markdown
@@ -304,13 +358,27 @@ Você é um especialista em criar simuladores de certificação. Preciso que voc
 
 **QUESTÕES PARA CONVERTER**:
 
+📌 **OPÇÃO 1 - Colar Texto**: Cole suas questões abaixo em qualquer formato de texto:
+
 ```
-[Cole suas questões aqui - podem estar em qualquer formato: PDF, texto, doc, planilha, etc.]
+[Cole suas questões aqui - pode ser texto puro, lista numerada, qualquer formato]
 ```
+
+📎 **OPÇÃO 2 - Anexar Arquivo(s)**: Anexe um ou mais arquivos contendo as questões:
+
+- Formatos aceitos: PDF, DOC, DOCX, XLS, XLSX, TXT, PNG, JPG
+- Você pode anexar múltiplos arquivos de uma vez
+- Eu vou extrair e processar todas as questões dos arquivos
+
+💡 **Dica de Uso**:
+
+- Poucas questões (< 20)? → Cole diretamente no texto (OPÇÃO 1)
+- Muitas questões (> 20)? → Anexe arquivo(s) (OPÇÃO 2)
+- Questões em imagens/PDFs escaneados? → Anexe os arquivos (OPÇÃO 2)
 
 **TAREFA**:
 
-1. Analise cada questão cuidadosamente
+1. Analise cada questão cuidadosamente (do texto colado OU dos arquivos anexados)
 2. Atribua ao tópico mais apropriado (use as chaves dos tópicos acima)
 3. Identifique o tipo: `'single'` (uma resposta) ou `'multiple'` (várias respostas)
 4. Gere explicações educativas (2-3 frases) de por que a resposta está correta
@@ -421,8 +489,113 @@ window.questionBank = [
 - Numere os IDs sequencialmente por tópico (`_q001`, `_q002`, etc.)
 - Mantenha consistência nas traduções (mesma estrutura, mesmo número de opções)
 - Se a questão original estiver apenas em um idioma, você DEVE gerar a tradução
+- **Se houver MUITAS questões** e você atingir o limite de processamento:
+  - Processe em LOTES de 15-20 questões por vez
+  - **PRIMEIRO ENVIO**: Envie o código completo com estrutura:
+    ```javascript
+    window.questionBank = [
+      {
+        /* questão 1 */
+      },
+      {
+        /* questão 2 */
+      },
+      // ... questões 1-20
+    ];
+    ```
+  - **ENVIOS SEGUINTES**: Envie SOMENTE os objetos das questões (sem `window.questionBank = [` e sem `];`):
+    ```javascript
+    { /* questão 21 */ },
+    { /* questão 22 */ },
+    // ... questões 21-40
+    ```
+  - Isso facilita copiar e colar - basta adicionar dentro do array existente
+  - Mantenha a numeração sequencial entre lotes
+  - Ao final, teremos um único `window.questionBank` completo
 
-**CONVERTA AS QUESTÕES ACIMA**
+**EXEMPLO DE ENVIO INCREMENTAL**:
+
+📤 **Primeiro Envio (questões 1-20)**:
+
+```javascript
+window.questionBank = [
+  {
+    id: "java_fund_q001",
+    type: "single",
+    topic: "java_fundamentals",
+    en: {
+      /* ... */
+    },
+    pt: {
+      /* ... */
+    },
+  },
+  {
+    id: "java_fund_q002",
+    // ... questões até q020
+  },
+];
+```
+
+📤 **Segundo Envio (questões 21-40)** - SOMENTE os objetos:
+
+```javascript
+  {
+    id: 'java_fund_q021',
+    type: 'single',
+    topic: 'java_fundamentals',
+    en: { /* ... */ },
+    pt: { /* ... */ }
+  },
+  {
+    id: 'java_fund_q022',
+    // ... questões até q040
+  }
+```
+
+_👆 Note que NÃO tem `window.questionBank = [` nem `];` - só os objetos com vírgula_
+
+📤 **Terceiro Envio (questões 41-60)** - SOMENTE os objetos:
+
+```javascript
+  {
+    id: 'java_fund_q041',
+    // ... questões restantes
+  }
+```
+
+💡 **Como colar no arquivo**:
+
+1. Primeiro envio → Cole tudo (substitui o array)
+2. Segundo envio em diante → Cole ANTES do `];` final
+3. Resultado: um único array com todas as questões
+
+**CONVERSÃO - Escolha seu método**:
+
+✅ Se você **COLOU questões acima** (OPÇÃO 1):
+
+- Converta todas as questões do texto colado
+- Gere o código JavaScript completo
+
+✅ Se você **ANEXOU arquivo(s)** (OPÇÃO 2):
+
+- Extraia todas as questões dos arquivos anexados
+- Converta cada questão encontrada
+- Gere o código JavaScript completo
+
+✅ Se você usou **AMBOS** (texto + arquivos):
+
+- Processe primeiro o texto colado
+- Depois processe os arquivos anexados
+- Combine tudo em um único `window.questionBank`
+
+📦 **Se a lista for MUITO GRANDE** (> 50 questões):
+
+- **1º ENVIO**: Gere com estrutura completa (`window.questionBank = [ ... ];`)
+- **2º+ ENVIOS**: Gere SOMENTE os objetos (sem `window.questionBank = [` e `];`)
+- Avise claramente: "Este é o envio X de Y" e "Cole após a última questão, antes do `];`"
+
+**COMECE A CONVERSÃO AGORA!**
 ````
 
 **✅ Após executar este prompt**:
@@ -432,6 +605,65 @@ window.questionBank = [
 3. Substitua o conteúdo de `window.questionBank = [ ... ];`
 4. Salve o arquivo
 5. Abra `index.html` no navegador e teste!
+
+### 📦 Trabalhando com Envios Incrementais
+
+Se a IA processar as questões em lotes (quando há muitas questões), siga este fluxo:
+
+**1️⃣ Primeiro Lote (Questões 1-20)**:
+
+```javascript
+// A IA envia:
+window.questionBank = [
+  { id: "topic_q001" /* ... */ },
+  { id: "topic_q002" /* ... */ },
+  // ... até q020
+];
+```
+
+✅ **Ação**: Cole isso COMPLETAMENTE no arquivo `questions-unified.js`
+
+**2️⃣ Segundo Lote (Questões 21-40)**:
+
+```javascript
+// A IA envia SOMENTE:
+  { id: 'topic_q021', /* ... */ },
+  { id: 'topic_q022', /* ... */ },
+  // ... até q040
+```
+
+✅ **Ação**:
+
+1. Abra `questions-unified.js`
+2. Vá até o FINAL do array (antes do `];`)
+3. Adicione uma vírgula após a última questão
+4. Cole o novo lote
+5. Salve
+
+**3️⃣ Terceiro Lote e Seguintes**:
+
+- Repita o processo do passo 2️⃣
+- Sempre cole ANTES do `];` final
+- Sempre adicione vírgula após a questão anterior
+
+**Resultado Final**:
+
+```javascript
+window.questionBank = [
+  { id: "topic_q001" /* ... */ }, // ← Lote 1
+  { id: "topic_q002" /* ... */ },
+  // ... (18 questões)
+  { id: "topic_q020" /* ... */ },
+  { id: "topic_q021" /* ... */ }, // ← Lote 2
+  { id: "topic_q022" /* ... */ },
+  // ... (18 questões)
+  { id: "topic_q040" /* ... */ },
+  { id: "topic_q041" /* ... */ }, // ← Lote 3
+  // ... todas as questões em um único array
+];
+```
+
+💡 **Dica**: Use `Ctrl+End` (ou `Cmd+End` no Mac) para ir rapidamente ao final do arquivo!
 
 ---
 
